@@ -24,11 +24,11 @@ function init() {
     document.body.appendChild( container );
 
     camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 0.25, 1000 );
-    camera.position.set( -10, 10, 100 );
-    camera.lookAt( new THREE.Vector3( 0, 2, 0 ) );
+    camera.position.set( 0, 30, 60 );
+    camera.lookAt( new THREE.Vector3( 0, 2, 0) );
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0xe0e0e0 );
+    scene.background = new THREE.Color( 0x000000 );
     scene.fog = new THREE.Fog( 0x000000, 2, 1000 );
 
     clock = new THREE.Clock();
@@ -37,7 +37,6 @@ function init() {
     var light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
     light.position.set( 0, 20, 0 );
     scene.add( light );
-
     light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 0, 20, 10 );
     scene.add( light );
@@ -75,6 +74,7 @@ function init() {
     container.appendChild( renderer.domElement );
 
     window.addEventListener('resize', onWindowResize, false );
+    window.addEventListener('keydown', onDocumentKeyDown, false );
 
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -103,18 +103,16 @@ function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-function onDocumentKeyDown(event) {
+function onDocumentKeyDown(e) {
     var keyCode = event.which;
+    console.log(activeAction._clip.name);
     if (activeAction._clip.name == 'Take 001') {
-        if (keyCode == 87) {
-            model.position.z += zSpeed;
-        } else if (keyCode == 83) {
-            model.position.z -= zSpeed;
-        } else if (keyCode == 65) {
-            model.position.x += xSpeed;
-        } else if (keyCode == 68) {
-            model.position.x -= xSpeed;
-        }
+        activeAction.paused = true;
+        activeAction._clip.name = ''
+    }else{
+        console.log(activeAction);
+        activeAction._clip.name = 'Take 001'
+        activeAction.paused = false;
     }
 };
 
