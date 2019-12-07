@@ -23,4 +23,4 @@ Trabalho Computação Gráfica
 3. Disponibilidade
     A aplicação deve estar disponível online para ser acessada no browser. Recomendo que o repositório seja
 disponibilizado com Github Pages.
-    Segue link para acesso: 
+    Segue link para acesso: https://rodolfotr.github.io/CG-2019.2N-T1/
