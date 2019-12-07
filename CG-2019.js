@@ -11,9 +11,8 @@ import { GLTFLoader } from 'https://threejsfundamentals.org/threejs/resources/th
 var container, stats, clock, gui, mixer, actions, activeAction;
 var camera, scene, renderer, model, controls;
 
-var xSpeed = 0.5;
-var ySpeed = 0.5;
-var zSpeed = 0.5;
+var xSpeed = 10;
+var zSpeed = 10;
 
 init();
 animate();
@@ -24,7 +23,7 @@ function init() {
     document.body.appendChild( container );
 
     camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 0.25, 1000 );
-    camera.position.set( 0, 30, 60 );
+    camera.position.set( 0, 20, 30 );
     camera.lookAt( new THREE.Vector3( 0, 2, 0) );
 
     scene = new THREE.Scene();
@@ -34,21 +33,21 @@ function init() {
     clock = new THREE.Clock();
 
     // lights
-    var light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
-    light.position.set( 0, 20, 0 );
+    var light = new THREE.HemisphereLight( 0x000000, 0x004400 );
+    light.position.set( 0, 10, 0 );
     scene.add( light );
     light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 0, 20, 10 );
     scene.add( light );
 
     // ground
-    var gt = new THREE.TextureLoader().load("./grasslight-big.jpg");
-    var gg = new THREE.PlaneBufferGeometry(2000, 2000);
+    var gt = new THREE.TextureLoader().load("./grass.png");
+    var gg = new THREE.PlaneBufferGeometry(1000,1000);
     var gm = new THREE.MeshPhongMaterial({ color: 0xffffff, map: gt });
 
     var ground = new THREE.Mesh(gg, gm);
     ground.rotation.x = - Math.PI / 2;
-    ground.material.map.repeat.set(8, 8);
+    ground.material.map.repeat.set(25, 25);
     ground.material.map.wrapS = ground.material.map.wrapT = THREE.RepeatWrapping;
     ground.receiveShadow = true;
 
@@ -59,8 +58,8 @@ function init() {
     loader.load( './pokemon/Magnemite/scene.gltf', function ( gltf ) {
         model = gltf.scene;
         scene.add( model );
-        model.scale.set(.5, .5, .5);
-        model.position.y += 3;
+        model.scale.set(.3, .3, .3);
+        model.position.y += 1;
         createGUI( model, gltf.animations );
     }, undefined, function ( e ) {
         console.error( e );
@@ -105,14 +104,24 @@ function onWindowResize() {
 
 function onDocumentKeyDown(e) {
     var keyCode = event.which;
-    console.log(activeAction._clip.name);
-    if (activeAction._clip.name == 'Take 001') {
-        activeAction.paused = true;
-        activeAction._clip.name = ''
+    if (e.code != 'Space'){
+        if (keyCode == 87) {
+            model.position.z += zSpeed;
+        } else if (keyCode == 83) {
+            model.position.z -= zSpeed;
+        } else if (keyCode == 65) {
+            model.position.x += xSpeed;
+        } else if (keyCode == 68) {
+            model.position.x -= xSpeed;
+        }
     }else{
-        console.log(activeAction);
-        activeAction._clip.name = 'Take 001'
-        activeAction.paused = false;
+        if (activeAction._clip.name == 'Take 001') {
+            activeAction.paused = true;
+            activeAction._clip.name = ''
+        }else{
+            activeAction._clip.name = 'Take 001'
+            activeAction.paused = false;
+        }
     }
 };
 
