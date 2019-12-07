@@ -23,13 +23,13 @@ function init() {
     container = document.createElement( 'div' );
     document.body.appendChild( container );
 
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.25, 100 );
-    camera.position.set( - 5, 3, 10 );
+    camera = new THREE.PerspectiveCamera( 20, window.innerWidth / window.innerHeight, 0.25, 1000 );
+    camera.position.set( -10, 10, 100 );
     camera.lookAt( new THREE.Vector3( 0, 2, 0 ) );
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xe0e0e0 );
-    scene.fog = new THREE.Fog( 0xe0e0e0, 20, 100 );
+    scene.fog = new THREE.Fog( 0x000000, 2, 1000 );
 
     clock = new THREE.Clock();
 
@@ -43,21 +43,33 @@ function init() {
     scene.add( light );
 
     // ground
-    var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
-    mesh.rotation.x = - Math.PI / 2;
-    scene.add( mesh );
+    // var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+    // mesh.rotation.x = - Math.PI / 2;
+    // scene.add( mesh );
 
-    var grid = new THREE.GridHelper( 200, 40, 0x000000, 0x000000 );
-    grid.material.opacity = 0.2;
-    grid.material.transparent = true;
-    scene.add( grid );
+    // var grid = new THREE.GridHelper( 200, 40, 0x000000, 0x000000 );
+    // grid.material.opacity = 0.2;
+    // grid.material.transparent = true;
+    // scene.add( grid );
+    var gt = new THREE.TextureLoader().load("./grasslight-big.jpg");
+    var gg = new THREE.PlaneBufferGeometry(2000, 2000);
+    var gm = new THREE.MeshPhongMaterial({ color: 0xffffff, map: gt });
+
+    var ground = new THREE.Mesh(gg, gm);
+    ground.rotation.x = - Math.PI / 2;
+    ground.material.map.repeat.set(8, 8);
+    ground.material.map.wrapS = ground.material.map.wrapT = THREE.RepeatWrapping;
+    ground.receiveShadow = true;
+
+    scene.add(ground);
 
     // pokemon
     var loader = new GLTFLoader();
     loader.load( './pokemon/Magnemite/scene.gltf', function ( gltf ) {
         model = gltf.scene;
         scene.add( model );
-        model.scale.set(.2, .2, .2);
+        model.scale.set(.5, .5, .5);
+        model.position.y += 3;
         createGUI( model, gltf.animations );
     }, undefined, function ( e ) {
         console.error( e );
